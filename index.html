@@ -1,0 +1,1422 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>파이썬 마스터 | Python Learning</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Noto+Sans+KR:wght@300;400;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --surface: #111827;
+    --card: #1a2235;
+    --border: #2a3a55;
+    --accent: #3dffa0;
+    --accent2: #ff6b6b;
+    --accent3: #ffd93d;
+    --accent4: #6bceff;
+    --text: #e8f0fe;
+    --muted: #8899bb;
+    --python-blue: #4b8bbe;
+    --python-yellow: #ffd43b;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Background grid */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(61,255,160,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(61,255,160,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(10,14,26,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    height: 60px;
+  }
+
+  .nav-logo {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.2rem;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .nav-logo span { color: var(--python-yellow); }
+
+  .nav-links {
+    display: flex;
+    gap: 0.3rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.85rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+
+  .nav-links a:hover, .nav-links a.active {
+    color: var(--text);
+    background: var(--card);
+  }
+
+  .nav-badge {
+    background: var(--accent);
+    color: #000;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* ── SECTIONS ── */
+  section { display: none; padding: 80px 2rem 2rem; min-height: 100vh; position: relative; z-index: 1; }
+  section.active { display: block; }
+
+  /* ── HERO ── */
+  #home {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding-top: 60px;
+  }
+  #home.active { display: flex; }
+
+  .hero-eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--accent);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .hero-title {
+    font-size: clamp(3rem, 8vw, 6rem);
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+
+  .hero-title .py { color: var(--python-blue); }
+  .hero-title .thon { color: var(--python-yellow); }
+  .hero-title .rest { color: var(--text); }
+
+  .hero-sub {
+    font-size: 1.1rem;
+    color: var(--muted);
+    max-width: 500px;
+    line-height: 1.7;
+    margin-bottom: 2.5rem;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+
+  .hero-cta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    animation: fadeUp 0.6s 0.3s ease both;
+  }
+
+  .btn {
+    padding: 0.75rem 2rem;
+    border-radius: 8px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+    text-decoration: none;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #000;
+  }
+  .btn-primary:hover { background: #2ae88a; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(61,255,160,0.3); }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+
+  /* hero snake decoration */
+  .hero-snake {
+    font-size: 5rem;
+    margin-bottom: 1rem;
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .stats-row {
+    display: flex;
+    gap: 3rem;
+    margin-top: 4rem;
+    animation: fadeUp 0.6s 0.4s ease both;
+  }
+
+  .stat { text-align: center; }
+  .stat-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .stat-label { font-size: 0.8rem; color: var(--muted); margin-top: 0.2rem; }
+
+  /* ── CURRICULUM ── */
+  .section-header {
+    margin-bottom: 2.5rem;
+    animation: fadeUp 0.5s ease both;
+  }
+  .section-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+  .section-title { font-size: 2rem; font-weight: 900; }
+  .section-title span { color: var(--python-yellow); }
+
+  .curriculum-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+
+  .lesson-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: all 0.25s;
+    position: relative;
+    overflow: hidden;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  .lesson-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: var(--accent);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .lesson-card:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: 0 12px 32px rgba(0,0,0,0.3); }
+  .lesson-card:hover::before { opacity: 1; }
+
+  .lesson-card.locked { opacity: 0.5; cursor: not-allowed; }
+  .lesson-card.locked:hover { transform: none; border-color: var(--border); box-shadow: none; }
+  .lesson-card.locked::before { display: none; }
+
+  .lesson-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .lesson-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem; }
+
+  .lesson-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.5; }
+
+  .lesson-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1rem;
+  }
+
+  .lesson-tags { display: flex; gap: 0.3rem; }
+  .tag {
+    font-size: 0.65rem;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-family: 'Space Mono', monospace;
+  }
+  .tag-beginner { background: rgba(61,255,160,0.1); color: var(--accent); }
+  .tag-mid { background: rgba(107,206,255,0.1); color: var(--accent4); }
+  .tag-hard { background: rgba(255,107,107,0.1); color: var(--accent2); }
+
+  .lesson-icon { font-size: 1.4rem; }
+
+  /* ── LESSON DETAIL ── */
+  #lesson-detail { display: none; }
+  #lesson-detail.active { display: block; }
+
+  .lesson-nav {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .back-btn {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    transition: all 0.2s;
+  }
+  .back-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  .lesson-content-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    align-items: start;
+  }
+
+  @media (max-width: 768px) {
+    .lesson-content-grid { grid-template-columns: 1fr; }
+    .stats-row { gap: 1.5rem; }
+    .nav-links { display: none; }
+  }
+
+  .theory-panel {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+  }
+
+  .theory-panel h3 {
+    font-size: 1rem;
+    color: var(--accent4);
+    margin-bottom: 1rem;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .theory-panel p { font-size: 0.9rem; color: var(--muted); line-height: 1.8; margin-bottom: 1rem; }
+  .theory-panel p strong { color: var(--text); }
+
+  .code-example {
+    background: #0d1117;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    line-height: 1.7;
+    margin: 1rem 0;
+    overflow-x: auto;
+  }
+
+  .kw { color: #ff79c6; }
+  .fn { color: #50fa7b; }
+  .str { color: #f1fa8c; }
+  .num { color: #bd93f9; }
+  .cm { color: #6272a4; }
+  .var { color: #8be9fd; }
+  .op { color: #ff79c6; }
+
+  /* Editor Panel */
+  .editor-panel {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    position: sticky;
+    top: 80px;
+  }
+
+  .editor-header {
+    background: #0d1117;
+    border-bottom: 1px solid var(--border);
+    padding: 0.7rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .editor-dots { display: flex; gap: 6px; }
+  .dot { width: 12px; height: 12px; border-radius: 50%; }
+  .dot-r { background: #ff5f57; }
+  .dot-y { background: #febc2e; }
+  .dot-g { background: #28c840; }
+
+  .editor-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+  }
+
+  .run-btn {
+    background: var(--accent);
+    color: #000;
+    border: none;
+    padding: 0.35rem 0.9rem;
+    border-radius: 5px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .run-btn:hover { background: #2ae88a; }
+
+  .code-editor {
+    width: 100%;
+    min-height: 200px;
+    background: #0d1117;
+    color: #f8f8f2;
+    border: none;
+    padding: 1rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    line-height: 1.7;
+    resize: vertical;
+    outline: none;
+  }
+
+  .output-area {
+    border-top: 1px solid var(--border);
+    padding: 0.7rem 1rem;
+    background: #080c14;
+    min-height: 80px;
+  }
+
+  .output-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+
+  .output-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    color: var(--accent);
+  }
+
+  .output-error { color: var(--accent2); }
+
+  /* Quiz Panel */
+  .quiz-panel {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .quiz-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--accent3);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  .quiz-q { font-size: 0.95rem; font-weight: 700; margin-bottom: 1rem; line-height: 1.5; }
+
+  .quiz-options { display: grid; gap: 0.5rem; }
+
+  .quiz-opt {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 0.7rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: left;
+    font-size: 0.85rem;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: all 0.2s;
+  }
+
+  .quiz-opt:hover { border-color: var(--accent4); color: var(--accent4); }
+  .quiz-opt.correct { border-color: var(--accent); background: rgba(61,255,160,0.1); color: var(--accent); }
+  .quiz-opt.wrong { border-color: var(--accent2); background: rgba(255,107,107,0.1); color: var(--accent2); }
+
+  .quiz-feedback {
+    margin-top: 1rem;
+    padding: 0.8rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    display: none;
+  }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.ok { background: rgba(61,255,160,0.1); color: var(--accent); border: 1px solid rgba(61,255,160,0.3); }
+  .quiz-feedback.fail { background: rgba(255,107,107,0.1); color: var(--accent2); border: 1px solid rgba(255,107,107,0.3); }
+
+  /* Progress */
+  .progress-section {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .progress-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+  .progress-title { font-family: 'Space Mono', monospace; font-size: 0.9rem; color: var(--accent4); }
+  .progress-pct { font-family: 'Space Mono', monospace; font-size: 1.5rem; font-weight: 700; color: var(--accent); }
+
+  .progress-bar-bg {
+    background: var(--surface);
+    border-radius: 20px;
+    height: 8px;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent4));
+    border-radius: 20px;
+    transition: width 1s ease;
+  }
+
+  .progress-items { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 0.5rem; }
+  .prog-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.6rem;
+    font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .prog-item.done { border-color: rgba(61,255,160,0.4); color: var(--accent); }
+  .prog-item.done::before { content: '✓'; font-weight: 700; }
+  .prog-item:not(.done) { color: var(--muted); }
+  .prog-item:not(.done)::before { content: '○'; }
+
+  /* Animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: var(--card);
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    padding: 0.8rem 1.5rem;
+    border-radius: 10px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    z-index: 200;
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all 0.3s;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">🐍 <span>Py</span>Master</div>
+  <ul class="nav-links">
+    <li><a onclick="showSection('home')" class="active" id="nav-home">홈</a></li>
+    <li><a onclick="showSection('curriculum')" id="nav-curriculum">커리큘럼</a></li>
+    <li><a onclick="showSection('playground')" id="nav-playground">플레이그라운드</a></li>
+    <li><a onclick="showSection('progress')" id="nav-progress">내 진도</a></li>
+  </ul>
+  <span class="nav-badge" id="score-badge">0 XP</span>
+</nav>
+
+<!-- ── HOME ── -->
+<section id="home" class="active">
+  <div class="hero-snake">🐍</div>
+  <p class="hero-eyebrow">// 파이썬 마스터 코스</p>
+  <h1 class="hero-title">
+    <span class="py">Py</span><span class="thon">thon</span><br>
+    <span class="rest">을 배워보자</span>
+  </h1>
+  <p class="hero-sub">
+    기초부터 실전까지 — 코드 에디터와 퀴즈로 <br>손으로 직접 배우는 파이썬 완전 정복
+  </p>
+  <div class="hero-cta">
+    <button class="btn btn-primary" onclick="showSection('curriculum')">학습 시작하기 →</button>
+    <button class="btn btn-outline" onclick="showSection('playground')">코드 실습장</button>
+  </div>
+  <div class="stats-row">
+    <div class="stat"><div class="stat-num">10+</div><div class="stat-label">단원</div></div>
+    <div class="stat"><div class="stat-num">50+</div><div class="stat-label">예제 코드</div></div>
+    <div class="stat"><div class="stat-num">30+</div><div class="stat-label">퀴즈</div></div>
+  </div>
+</section>
+
+<!-- ── CURRICULUM ── -->
+<section id="curriculum">
+  <div class="section-header">
+    <div class="section-tag">// 커리큘럼</div>
+    <h2 class="section-title">무엇을 <span>배울까?</span></h2>
+  </div>
+  <div class="curriculum-grid" id="curriculum-grid"></div>
+</section>
+
+<!-- ── LESSON DETAIL ── -->
+<section id="lesson-detail">
+  <div class="lesson-nav">
+    <button class="back-btn" onclick="showSection('curriculum')">← 목록으로</button>
+    <span id="lesson-breadcrumb" style="font-size:0.8rem;color:var(--muted)"></span>
+  </div>
+  <div id="lesson-body"></div>
+</section>
+
+<!-- ── PLAYGROUND ── -->
+<section id="playground">
+  <div class="section-header">
+    <div class="section-tag">// 플레이그라운드</div>
+    <h2 class="section-title">자유 <span>코딩</span> 실습장</h2>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden">
+    <div class="editor-header">
+      <div class="editor-dots">
+        <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+      </div>
+      <span class="editor-title">main.py — 자유 실습</span>
+      <button class="run-btn" onclick="runPlayground()">▶ 실행</button>
+    </div>
+    <textarea class="code-editor" id="playground-editor" style="min-height:320px"># 여기에 파이썬 코드를 자유롭게 작성하세요!
+# 기본 기능을 지원하는 시뮬레이터입니다.
+
+name = "파이썬 학습자"
+print(f"안녕하세요, {name}님!")
+
+for i in range(1, 6):
+    print(f"  {i}단계 완료! 🎉")
+
+print("파이썬은 재미있어요 🐍")</textarea>
+    <div class="output-area">
+      <div class="output-label">출력 결과</div>
+      <div class="output-text" id="playground-output">▶ 실행 버튼을 눌러보세요</div>
+    </div>
+  </div>
+  <div style="margin-top:1rem;padding:1rem;background:var(--card);border:1px solid var(--border);border-radius:10px;font-size:0.8rem;color:var(--muted)">
+    💡 <strong style="color:var(--text)">지원 기능:</strong> print, input(시뮬레이션), 변수, 조건문, 반복문, 리스트, 딕셔너리, 함수, f-string, 기본 수학 연산
+  </div>
+</section>
+
+<!-- ── PROGRESS ── -->
+<section id="progress">
+  <div class="section-header">
+    <div class="section-tag">// 내 진도</div>
+    <h2 class="section-title">학습 <span>현황</span></h2>
+  </div>
+  <div class="progress-section">
+    <div class="progress-header">
+      <span class="progress-title">전체 진도율</span>
+      <span class="progress-pct" id="prog-pct">0%</span>
+    </div>
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="prog-bar" style="width:0%"></div>
+    </div>
+    <div class="progress-items" id="progress-items"></div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:1rem">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1rem;text-align:center">
+      <div style="font-size:1.8rem;font-weight:900;color:var(--accent);font-family:'Space Mono',monospace" id="stat-done">0</div>
+      <div style="font-size:0.75rem;color:var(--muted);margin-top:0.3rem">완료한 단원</div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1rem;text-align:center">
+      <div style="font-size:1.8rem;font-weight:900;color:var(--python-yellow);font-family:'Space Mono',monospace" id="stat-xp">0</div>
+      <div style="font-size:0.75rem;color:var(--muted);margin-top:0.3rem">획득 XP</div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1rem;text-align:center">
+      <div style="font-size:1.8rem;font-weight:900;color:var(--accent4);font-family:'Space Mono',monospace" id="stat-quiz">0</div>
+      <div style="font-size:0.75rem;color:var(--muted);margin-top:0.3rem">정답 맞춘 퀴즈</div>
+    </div>
+  </div>
+</section>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── DATA ──
+const lessons = [
+  {
+    id: 0,
+    title: "파이썬이란?",
+    desc: "파이썬의 역사와 특징, 설치 방법을 알아봅니다.",
+    icon: "🐍",
+    tag: "beginner",
+    tagLabel: "입문",
+    theory: `
+      <p><strong>파이썬(Python)</strong>은 1991년 귀도 반 로섬이 만든 범용 프로그래밍 언어입니다. 읽기 쉽고 간결한 문법 덕분에 입문자에게 최고의 언어로 꼽힙니다.</p>
+      <p>파이썬의 특징:<br>
+      • <strong>가독성</strong> — 영어 문장처럼 읽히는 코드<br>
+      • <strong>인터프리터</strong> — 한 줄씩 즉시 실행<br>
+      • <strong>다목적</strong> — 웹, AI, 데이터분석, 자동화 모두 OK</p>
+      <p>첫 번째 파이썬 코드를 실행해 봅시다:</p>
+    `,
+    code: `# 나의 첫 파이썬 코드!
+print("Hello, World!")
+print("안녕하세요, 파이썬!")
+print("파이썬을 배워봅시다 🐍")`,
+    quiz: {
+      q: "파이썬을 만든 사람은 누구인가요?",
+      opts: ["빌 게이츠", "귀도 반 로섬", "리누스 토르발스", "제임스 고슬링"],
+      ans: 1,
+      explain: "파이썬은 1991년 귀도 반 로섬(Guido van Rossum)이 개발했습니다."
+    }
+  },
+  {
+    id: 1,
+    title: "변수와 자료형",
+    desc: "변수를 선언하고 정수, 문자열, 불리언 등 기본 자료형을 배웁니다.",
+    icon: "📦",
+    tag: "beginner",
+    tagLabel: "입문",
+    theory: `
+      <p><strong>변수(Variable)</strong>는 데이터를 담는 상자입니다. 파이썬에서는 타입 선언 없이 바로 사용할 수 있습니다.</p>
+      <p>주요 자료형:<br>
+      • <strong>int</strong> — 정수 (1, 42, -5)<br>
+      • <strong>float</strong> — 소수 (3.14, 0.5)<br>
+      • <strong>str</strong> — 문자열 ("안녕")<br>
+      • <strong>bool</strong> — 참/거짓 (True, False)</p>
+    `,
+    code: `# 변수 선언
+name = "파이썬"
+age = 33
+pi = 3.14
+is_fun = True
+
+print(f"이름: {name}")
+print(f"나이: {age}세")
+print(f"파이 값: {pi}")
+print(f"재미있나요? {is_fun}")
+print(f"자료형 확인: {type(name)}")`,
+    quiz: {
+      q: "파이썬에서 소수점이 있는 숫자의 자료형은?",
+      opts: ["int", "str", "float", "double"],
+      ans: 2,
+      explain: "소수점이 있는 숫자는 float(부동소수점) 자료형입니다."
+    }
+  },
+  {
+    id: 2,
+    title: "조건문 if/elif/else",
+    desc: "조건에 따라 다른 코드를 실행하는 방법을 배웁니다.",
+    icon: "🔀",
+    tag: "beginner",
+    tagLabel: "입문",
+    theory: `
+      <p><strong>조건문</strong>은 특정 조건이 참일 때만 코드를 실행합니다. 파이썬은 들여쓰기(4칸)로 블록을 구분합니다.</p>
+      <p>구조: <code>if 조건:</code> → <code>elif 다른조건:</code> → <code>else:</code></p>
+      <p>비교 연산자: <code>==</code> 같다, <code>!=</code> 다르다, <code>&gt;</code> 크다, <code>&lt;</code> 작다</p>
+    `,
+    code: `# 조건문 예제
+score = 85
+
+if score >= 90:
+    print("A등급 🏆 훌륭합니다!")
+elif score >= 80:
+    print("B등급 👍 잘했습니다!")
+elif score >= 70:
+    print("C등급 😊 노력했습니다!")
+else:
+    print("F등급 💪 다시 도전!")
+
+# 논리 연산자
+age = 20
+if age >= 18 and age < 65:
+    print("성인입니다")`,
+    quiz: {
+      q: "파이썬에서 '같다'를 비교하는 연산자는?",
+      opts: ["=", "==", "===", "equals"],
+      ans: 1,
+      explain: "=는 대입, ==는 비교 연산자입니다. 파이썬에서 값 비교는 ==를 사용합니다."
+    }
+  },
+  {
+    id: 3,
+    title: "반복문 for/while",
+    desc: "같은 코드를 여러 번 실행하는 반복문을 배웁니다.",
+    icon: "🔄",
+    tag: "beginner",
+    tagLabel: "입문",
+    theory: `
+      <p><strong>for문</strong>은 정해진 범위나 리스트를 순서대로 순회합니다.</p>
+      <p><strong>while문</strong>은 조건이 참인 동안 반복합니다.</p>
+      <p><code>range(시작, 끝, 증가)</code>로 숫자 범위를 만들 수 있습니다.</p>
+    `,
+    code: `# for 반복문
+print("=== 구구단 5단 ===")
+for i in range(1, 10):
+    print(f"5 x {i} = {5*i}")
+
+# while 반복문
+print("\n=== 카운트다운 ===")
+n = 5
+while n > 0:
+    print(f"  {n}...")
+    n -= 1
+print("  발사! 🚀")`,
+    quiz: {
+      q: "range(0, 5)가 만드는 숫자의 개수는?",
+      opts: ["4개", "5개", "6개", "10개"],
+      ans: 1,
+      explain: "range(0, 5)는 0, 1, 2, 3, 4 총 5개의 숫자를 만듭니다. 끝 숫자(5)는 포함되지 않습니다."
+    }
+  },
+  {
+    id: 4,
+    title: "리스트와 딕셔너리",
+    desc: "여러 데이터를 담는 컬렉션 자료형을 배웁니다.",
+    icon: "📋",
+    tag: "mid",
+    tagLabel: "중급",
+    theory: `
+      <p><strong>리스트(List)</strong>는 순서가 있는 데이터 모음입니다. <code>[1, 2, 3]</code>처럼 대괄호로 만듭니다.</p>
+      <p><strong>딕셔너리(Dict)</strong>는 키-값 쌍으로 데이터를 저장합니다. <code>{"키": "값"}</code>처럼 중괄호로 만듭니다.</p>
+    `,
+    code: `# 리스트
+fruits = ["사과", "바나나", "포도", "딸기"]
+print(f"과일 목록: {fruits}")
+print(f"첫 번째: {fruits[0]}")
+fruits.append("망고")
+print(f"추가 후: {fruits}")
+
+# 딕셔너리
+person = {
+    "이름": "홍길동",
+    "나이": 25,
+    "직업": "개발자"
+}
+print(f"\n이름: {person['이름']}")
+print(f"나이: {person['나이']}")
+for key, val in person.items():
+    print(f"  {key}: {val}")`,
+    quiz: {
+      q: "리스트에서 마지막 요소에 접근하는 인덱스는?",
+      opts: ["list[last]", "list[-1]", "list[end]", "list[0]"],
+      ans: 1,
+      explain: "파이썬에서 음수 인덱스를 사용하면 뒤에서부터 접근합니다. list[-1]이 마지막 요소입니다."
+    }
+  },
+  {
+    id: 5,
+    title: "함수 정의와 호출",
+    desc: "재사용 가능한 코드 블록인 함수를 만드는 방법을 배웁니다.",
+    icon: "⚙️",
+    tag: "mid",
+    tagLabel: "중급",
+    theory: `
+      <p><strong>함수(Function)</strong>는 특정 작업을 수행하는 코드 블록입니다. <code>def</code> 키워드로 정의하고, <code>return</code>으로 값을 반환합니다.</p>
+      <p>매개변수에 기본값을 설정할 수 있고, 여러 값을 반환할 수도 있습니다.</p>
+    `,
+    code: `# 함수 정의
+def greet(name, lang="ko"):
+    if lang == "ko":
+        return f"안녕하세요, {name}님!"
+    else:
+        return f"Hello, {name}!"
+
+# 함수 호출
+print(greet("철수"))
+print(greet("Alice", "en"))
+
+# 여러 값 반환
+def calc(a, b):
+    return a+b, a-b, a*b
+
+add, sub, mul = calc(10, 3)
+print(f"합:{add}, 차:{sub}, 곱:{mul}")`,
+    quiz: {
+      q: "파이썬 함수를 정의하는 키워드는?",
+      opts: ["function", "func", "def", "define"],
+      ans: 2,
+      explain: "파이썬은 def 키워드로 함수를 정의합니다. 예: def my_function():"
+    }
+  },
+  {
+    id: 6,
+    title: "클래스와 객체",
+    desc: "객체지향 프로그래밍의 기초, 클래스를 배웁니다.",
+    icon: "🏗️",
+    tag: "mid",
+    tagLabel: "중급",
+    theory: `
+      <p><strong>클래스(Class)</strong>는 객체를 만들기 위한 설계도입니다. 속성(변수)과 메서드(함수)를 묶습니다.</p>
+      <p><code>__init__</code>은 객체 생성 시 자동으로 호출되는 생성자입니다. <code>self</code>는 객체 자신을 가리킵니다.</p>
+    `,
+    code: `# 클래스 정의
+class Dog:
+    def __init__(self, name, breed):
+        self.name = name
+        self.breed = breed
+        self.tricks = []
+    
+    def bark(self):
+        return f"{self.name}: 멍멍! 🐕"
+    
+    def learn(self, trick):
+        self.tricks.append(trick)
+        return f"{self.name}이(가) '{trick}'을 배웠어요!"
+
+# 객체 생성
+dog = Dog("초코", "포메라니안")
+print(dog.bark())
+print(dog.learn("앉아"))
+print(dog.learn("악수"))
+print(f"할 수 있는 것: {dog.tricks}")`,
+    quiz: {
+      q: "클래스에서 객체 생성 시 자동 호출되는 메서드는?",
+      opts: ["__start__", "__begin__", "__init__", "__new__"],
+      ans: 2,
+      explain: "__init__은 생성자(constructor)로, 객체가 생성될 때 자동으로 호출됩니다."
+    }
+  },
+  {
+    id: 7,
+    title: "예외 처리 try/except",
+    desc: "에러가 발생했을 때 프로그램이 멈추지 않도록 처리하는 방법을 배웁니다.",
+    icon: "🛡️",
+    tag: "mid",
+    tagLabel: "중급",
+    theory: `
+      <p><strong>예외 처리</strong>는 런타임 에러가 발생해도 프로그램이 계속 실행되도록 합니다.</p>
+      <p><code>try</code> 블록에서 에러 가능 코드를, <code>except</code>에서 에러 처리를, <code>finally</code>에서 항상 실행할 코드를 작성합니다.</p>
+    `,
+    code: `# 예외 처리
+def safe_divide(a, b):
+    try:
+        result = a / b
+        return f"{a} ÷ {b} = {result:.2f}"
+    except ZeroDivisionError:
+        return "❌ 0으로 나눌 수 없습니다!"
+    except TypeError:
+        return "❌ 숫자만 입력해주세요!"
+    finally:
+        print("(계산 시도 완료)")
+
+print(safe_divide(10, 2))
+print(safe_divide(5, 0))
+print(safe_divide(10, 4))`,
+    quiz: {
+      q: "0으로 나눌 때 발생하는 예외 이름은?",
+      opts: ["MathError", "DivideError", "ZeroDivisionError", "ArithmeticException"],
+      ans: 2,
+      explain: "파이썬에서 0으로 나누면 ZeroDivisionError가 발생합니다."
+    }
+  },
+  {
+    id: 8,
+    title: "파일 입출력",
+    desc: "파일을 읽고 쓰는 방법을 배웁니다.",
+    icon: "📁",
+    tag: "hard",
+    tagLabel: "고급",
+    theory: `
+      <p><strong>파일 입출력</strong>으로 데이터를 영구 저장할 수 있습니다.</p>
+      <p><code>open(파일명, 모드)</code>로 파일을 엽니다.<br>
+      모드: <code>'r'</code> 읽기, <code>'w'</code> 쓰기, <code>'a'</code> 추가</p>
+      <p><code>with</code>문을 사용하면 자동으로 파일이 닫힙니다.</p>
+    `,
+    code: `# 파일 시뮬레이션 (브라우저 환경)
+import io
+
+# 메모리 파일로 시뮬레이션
+buf = io.StringIO()
+lines = ["파이썬 공부 일지\n",
+         "Day 1: 변수와 자료형 ✓\n",
+         "Day 2: 조건문과 반복문 ✓\n",
+         "Day 3: 함수와 클래스 ✓\n"]
+
+for line in lines:
+    buf.write(line)
+
+# 읽기
+buf.seek(0)
+content = buf.read()
+print("=== 파일 내용 ===")
+print(content)
+print(f"총 {len(lines)}줄 저장됨")`,
+    quiz: {
+      q: "파일을 읽기 전용으로 열 때 사용하는 모드는?",
+      opts: ["'read'", "'r'", "'open'", "'w'"],
+      ans: 1,
+      explain: "'r'은 read(읽기) 모드입니다. 파일이 없으면 에러가 발생합니다."
+    }
+  },
+  {
+    id: 9,
+    title: "라이브러리 활용",
+    desc: "파이썬의 강력한 표준 라이브러리와 외부 라이브러리를 배웁니다.",
+    icon: "📚",
+    tag: "hard",
+    tagLabel: "고급",
+    theory: `
+      <p>파이썬의 가장 큰 강점 중 하나는 풍부한 <strong>라이브러리 생태계</strong>입니다.</p>
+      <p>자주 쓰는 표준 라이브러리:<br>
+      • <code>math</code> — 수학 함수<br>
+      • <code>random</code> — 난수 생성<br>
+      • <code>datetime</code> — 날짜/시간<br>
+      • <code>collections</code> — 고급 자료구조</p>
+    `,
+    code: `import math
+import random
+from collections import Counter
+
+# math 라이브러리
+print(f"원주율: {math.pi:.4f}")
+print(f"제곱근(16): {math.sqrt(16)}")
+print(f"올림(3.2): {math.ceil(3.2)}")
+
+# random 라이브러리
+nums = [random.randint(1, 10) for _ in range(8)]
+print(f"\n랜덤 숫자: {nums}")
+print(f"그 중 최대: {max(nums)}")
+
+# Counter로 빈도 분석
+words = ["파이썬","파이썬","자바","파이썬","자바","C"]
+count = Counter(words)
+print(f"\n언어 빈도: {dict(count)}")`,
+    quiz: {
+      q: "라이브러리를 불러올 때 사용하는 키워드는?",
+      opts: ["include", "require", "import", "use"],
+      ans: 2,
+      explain: "파이썬에서는 import 키워드로 모듈이나 라이브러리를 불러옵니다."
+    }
+  }
+];
+
+// ── STATE ──
+const state = {
+  completed: new Set(),
+  xp: 0,
+  quizCorrect: 0
+};
+
+// ── PYTHON INTERPRETER (browser simulation) ──
+function runPython(code) {
+  const output = [];
+  const errors = [];
+
+  try {
+    // Preprocess
+    let processed = code;
+
+    // Remove import statements (simulate)
+    processed = processed.replace(/^import\s+\w+[^\n]*/gm, '// [import simulated]');
+    processed = processed.replace(/^from\s+\w+\s+import\s+[^\n]*/gm, '// [from import simulated]');
+
+    // f-string: f"..." → template literal equivalent
+    processed = processed.replace(/f"([^"]*)"/g, (_, inner) => {
+      const js = inner.replace(/\{([^}]+)\}/g, '${$1}');
+      return '`' + js + '`';
+    });
+    processed = processed.replace(/f'([^']*)'/g, (_, inner) => {
+      const js = inner.replace(/\{([^}]+)\}/g, '${$1}');
+      return '`' + js + '`';
+    });
+
+    // Python → JS conversions
+    processed = processed.replace(/print\s*\(/g, '__print__(');
+    processed = processed.replace(/True/g, 'true');
+    processed = processed.replace(/False/g, 'false');
+    processed = processed.replace(/None/g, 'null');
+    processed = processed.replace(/elif\s/g, 'else if ');
+    processed = processed.replace(/and\b/g, '&&');
+    processed = processed.replace(/or\b/g, '||');
+    processed = processed.replace(/not\b/g, '!');
+
+    // def → function
+    processed = processed.replace(/def\s+(\w+)\s*\(([^)]*)\)\s*:/g, 'function $1($2) {');
+
+    // class → class (simplified)
+    processed = processed.replace(/class\s+(\w+)\s*:/g, 'class $1 {');
+    processed = processed.replace(/__init__\s*\(self(?:,\s*)?/g, 'constructor(');
+    processed = processed.replace(/def\s+(\w+)\s*\(self(?:,\s*)?/g, '$1(');
+    processed = processed.replace(/self\./g, 'this.');
+    processed = processed.replace(/self(?=\s*[,)])/g, '');
+
+    // range()
+    processed = processed.replace(/range\s*\(\s*(\d+)\s*\)/g, '__range__(0,$1,1)');
+    processed = processed.replace(/range\s*\(\s*([^,)]+)\s*,\s*([^,)]+)\s*\)/g, '__range__($1,$2,1)');
+    processed = processed.replace(/range\s*\(\s*([^,)]+)\s*,\s*([^,)]+)\s*,\s*([^)]+)\s*\)/g, '__range__($1,$2,$3)');
+
+    // for i in list:
+    processed = processed.replace(/for\s+(\w+)\s+in\s+(.+?)\s*:/g, 'for (let $1 of $2) {');
+
+    // while cond:
+    processed = processed.replace(/while\s+(.+?)\s*:/g, 'while ($1) {');
+
+    // if / else:
+    processed = processed.replace(/^(\s*)if\s+(.+?)\s*:/gm, '$1if ($2) {');
+    processed = processed.replace(/^(\s*)else\s*:/gm, '$1} else {');
+    processed = processed.replace(/^(\s*)else if\s+(.+?)\s*:/gm, '$1} else if ($2) {');
+
+    // Fix: .items() → Object.entries()
+    processed = processed.replace(/(\w+)\.items\(\)/g, 'Object.entries($1)');
+    // .append() → .push()
+    processed = processed.replace(/\.append\(/g, '.push(');
+    // len() → .length
+    processed = processed.replace(/len\s*\(\s*(\w+)\s*\)/g, '$1.length');
+    // type()
+    processed = processed.replace(/type\s*\(\s*(\w+)\s*\)/g, 'typeof $1');
+    // max() min()
+    processed = processed.replace(/max\s*\(\s*(\w+)\s*\)/g, 'Math.max(...$1)');
+    processed = processed.replace(/min\s*\(\s*(\w+)\s*\)/g, 'Math.min(...$1)');
+    // math.pi etc
+    processed = processed.replace(/math\.pi/g, 'Math.PI');
+    processed = processed.replace(/math\.sqrt\s*\(/g, 'Math.sqrt(');
+    processed = processed.replace(/math\.ceil\s*\(/g, 'Math.ceil(');
+    processed = processed.replace(/math\.floor\s*\(/g, 'Math.floor(');
+    // random
+    processed = processed.replace(/random\.randint\s*\(([^,]+),\s*([^)]+)\)/g,
+      '(Math.floor(Math.random()*($2-$1+1))+($1))');
+    // Counter (simplified)
+    processed = processed.replace(/Counter\s*\(\s*(\w+)\s*\)/g, '__counter__($1)');
+    // dict()
+    processed = processed.replace(/dict\s*\(\s*(\w+)\s*\)/g, 'Object.fromEntries($1)');
+
+    // List comprehension: [expr for var in iter]
+    processed = processed.replace(/\[([^\]]+)\s+for\s+(\w+)\s+in\s+([^\]]+)\]/g,
+      (_, expr, v, iter) => {
+        const jsExpr = expr.trim().replace(/\{([^}]+)\}/g, '${$1}');
+        return `Array.from(${iter}).map(${v} => ${jsExpr})`;
+      });
+
+    // Python dict literals: use as-is (JS compatible)
+    // f-string format spec: :.2f
+    processed = processed.replace(/\$\{([^}]+)\}/g, (m, inner) => {
+      const fmtMatch = inner.match(/^(.+):(\.?\d+f)$/);
+      if (fmtMatch) {
+        const [, val, fmt] = fmtMatch;
+        const dec = fmt.replace('f', '').replace('.', '');
+        return '${parseFloat(' + val + ').toFixed(' + dec + ')}';
+      }
+      return m;
+    });
+
+    // Close open blocks (simple indent-based, heuristic)
+    const lines2 = processed.split('\n');
+    const result = [];
+    const indentStack = [0];
+    for (let i = 0; i < lines2.length; i++) {
+      const line = lines2[i];
+      const trimmed = line.trimStart();
+      const indent = line.length - trimmed.length;
+
+      // close blocks
+      while (indentStack.length > 1 && indent < indentStack[indentStack.length - 1]) {
+        indentStack.pop();
+        result.push(' '.repeat(indent) + '}');
+      }
+
+      result.push(line);
+
+      // track new block opening (lines ending in { )
+      if (trimmed.endsWith('{')) {
+        indentStack.push(indent + 2);
+      }
+    }
+    // close remaining
+    while (indentStack.length > 1) {
+      indentStack.pop();
+      result.push('}');
+    }
+
+    processed = result.join('\n');
+
+    // Helper functions
+    const helpers = `
+      function __print__(...args) {
+        output.push(args.map(a => {
+          if (Array.isArray(a)) return '[' + a.map(x => typeof x === 'string' ? '"'+x+'"' : x).join(', ') + ']';
+          if (a !== null && typeof a === 'object') return JSON.stringify(a);
+          return String(a);
+        }).join(' '));
+      }
+      function __range__(s,e,step=1) {
+        const r=[];
+        for(let i=s;i<e;i+=step) r.push(i);
+        return r;
+      }
+      function __counter__(arr) {
+        const c={};
+        for(const x of arr) c[x]=(c[x]||0)+1;
+        return c;
+      }
+      // io module simulation
+      const io = {
+        StringIO: class {
+          constructor() { this._buf=''; this._pos=0; }
+          write(s){ this._buf+=s; }
+          seek(p){ this._pos=p; }
+          read(){ return this._buf.slice(this._pos); }
+        }
+      };
+      // collections simulation
+      const collections = { Counter: __counter__ };
+      // math simulation (already handled)
+      const math = { pi: Math.PI, sqrt: Math.sqrt.bind(Math), ceil: Math.ceil.bind(Math), floor: Math.floor.bind(Math) };
+      // random simulation
+      const random = { randint: (a,b)=>Math.floor(Math.random()*(b-a+1))+a };
+    `;
+
+    const fullCode = helpers + '\n' + processed;
+    new Function('output', 'errors', fullCode)(output, errors);
+
+  } catch (e) {
+    errors.push('SyntaxError: ' + e.message);
+  }
+
+  return { output, errors };
+}
+
+// ── UI HELPERS ──
+function showSection(id) {
+  document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+
+  if (id === 'lesson-detail') {
+    document.getElementById('lesson-detail').classList.add('active');
+  } else {
+    document.getElementById(id).classList.add('active');
+    const navEl = document.getElementById('nav-' + id);
+    if (navEl) navEl.classList.add('active');
+  }
+
+  if (id === 'progress') updateProgress();
+  window.scrollTo(0, 0);
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ── RENDER CURRICULUM ──
+function renderCurriculum() {
+  const grid = document.getElementById('curriculum-grid');
+  grid.innerHTML = lessons.map((l, i) => `
+    <div class="lesson-card ${i > 0 ? '' : ''}" onclick="openLesson(${l.id})" style="animation-delay:${i*0.05}s">
+      <div class="lesson-num">CHAPTER ${String(i+1).padStart(2,'0')}</div>
+      <div class="lesson-title">${l.icon} ${l.title}</div>
+      <div class="lesson-desc">${l.desc}</div>
+      <div class="lesson-footer">
+        <div class="lesson-tags">
+          <span class="tag tag-${l.tag}">${l.tagLabel}</span>
+          ${state.completed.has(l.id) ? '<span class="tag" style="background:rgba(61,255,160,0.15);color:var(--accent)">✓ 완료</span>' : ''}
+        </div>
+        <span class="lesson-icon">${l.icon}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── OPEN LESSON ──
+function openLesson(id) {
+  const l = lessons[id];
+  document.getElementById('lesson-breadcrumb').textContent = `커리큘럼 > ${l.title}`;
+
+  const tagClass = l.tag === 'beginner' ? 'tag-beginner' : l.tag === 'mid' ? 'tag-mid' : 'tag-hard';
+
+  document.getElementById('lesson-body').innerHTML = `
+    <h2 style="font-size:1.6rem;font-weight:900;margin-bottom:0.5rem">${l.icon} ${l.title}</h2>
+    <div style="margin-bottom:1.5rem"><span class="tag ${tagClass}">${l.tagLabel}</span></div>
+
+    <div class="lesson-content-grid">
+      <div>
+        <div class="theory-panel">
+          <h3>// 이론 설명</h3>
+          ${l.theory}
+          <div class="code-example">${highlightCode(l.code)}</div>
+        </div>
+
+        <div class="quiz-panel">
+          <div class="quiz-title">// 퀴즈 도전!</div>
+          <div class="quiz-q">${l.quiz.q}</div>
+          <div class="quiz-options">
+            ${l.quiz.opts.map((opt, i) => `
+              <button class="quiz-opt" onclick="checkQuiz(${id}, ${i}, this)">${String.fromCharCode(65+i)}. ${opt}</button>
+            `).join('')}
+          </div>
+          <div class="quiz-feedback" id="quiz-fb-${id}"></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="editor-panel">
+          <div class="editor-header">
+            <div class="editor-dots">
+              <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+            </div>
+            <span class="editor-title">chapter${String(id+1).padStart(2,'0')}.py</span>
+            <button class="run-btn" onclick="runLesson(${id})">▶ 실행</button>
+          </div>
+          <textarea class="code-editor" id="editor-${id}">${l.code}</textarea>
+          <div class="output-area">
+            <div class="output-label">출력 결과</div>
+            <div class="output-text" id="output-${id}">▶ 실행 버튼을 클릭하세요</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  showSection('lesson-detail');
+}
+
+function highlightCode(code) {
+  return code
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/#[^\n]*/g, m => `<span class="cm">${m}</span>`)
+    .replace(/\b(def|class|return|if|elif|else|for|while|in|import|from|True|False|None|and|or|not|try|except|finally|with|as|pass|break|continue)\b/g,
+      m => `<span class="kw">${m}</span>`)
+    .replace(/\b(print|range|len|type|input|int|str|float|list|dict|set|max|min|sum|append|format)\b/g,
+      m => `<span class="fn">${m}</span>`)
+    .replace(/(f?"[^"]*"|f?'[^']*')/g, m => `<span class="str">${m}</span>`)
+    .replace(/\b(\d+\.?\d*)\b/g, m => `<span class="num">${m}</span>`);
+}
+
+function runLesson(id) {
+  const code = document.getElementById(`editor-${id}`).value;
+  const out = document.getElementById(`output-${id}`);
+  const { output, errors } = runPython(code);
+
+  if (errors.length) {
+    out.className = 'output-text output-error';
+    out.textContent = errors.join('\n');
+  } else {
+    out.className = 'output-text';
+    out.textContent = output.join('\n') || '(출력 없음)';
+    if (!state.completed.has(id)) {
+      state.completed.add(id);
+      state.xp += 50;
+      updateXP();
+      showToast(`🎉 챕터 완료! +50 XP`);
+      renderCurriculum();
+    }
+  }
+}
+
+function runPlayground() {
+  const code = document.getElementById('playground-editor').value;
+  const out = document.getElementById('playground-output');
+  const { output, errors } = runPython(code);
+
+  if (errors.length) {
+    out.className = 'output-text output-error';
+    out.textContent = errors.join('\n');
+  } else {
+    out.className = 'output-text';
+    out.textContent = output.join('\n') || '(출력 없음)';
+  }
+}
+
+function checkQuiz(lessonId, choice, btn) {
+  const l = lessons[lessonId];
+  const fb = document.getElementById(`quiz-fb-${lessonId}`);
+  const opts = btn.closest('.quiz-options').querySelectorAll('.quiz-opt');
+
+  opts.forEach(b => b.disabled = true);
+  btn.classList.add(choice === l.quiz.ans ? 'correct' : 'wrong');
+
+  if (choice === l.quiz.ans) {
+    opts[l.quiz.ans].classList.add('correct');
+    fb.className = 'quiz-feedback show ok';
+    fb.textContent = `✓ 정답! ${l.quiz.explain}`;
+    state.quizCorrect++;
+    state.xp += 20;
+    updateXP();
+    showToast('✓ 정답! +20 XP');
+  } else {
+    opts[l.quiz.ans].classList.add('correct');
+    fb.className = 'quiz-feedback show fail';
+    fb.textContent = `✗ 오답. 정답: ${l.quiz.opts[l.quiz.ans]}. ${l.quiz.explain}`;
+  }
+  fb.style.display = 'block';
+}
+
+function updateXP() {
+  document.getElementById('score-badge').textContent = `${state.xp} XP`;
+}
+
+function updateProgress() {
+  const pct = Math.round((state.completed.size / lessons.length) * 100);
+  document.getElementById('prog-pct').textContent = pct + '%';
+  document.getElementById('prog-bar').style.width = pct + '%';
+  document.getElementById('stat-done').textContent = state.completed.size;
+  document.getElementById('stat-xp').textContent = state.xp;
+  document.getElementById('stat-quiz').textContent = state.quizCorrect;
+
+  const items = document.getElementById('progress-items');
+  items.innerHTML = lessons.map(l =>
+    `<div class="prog-item ${state.completed.has(l.id) ? 'done' : ''}">${l.icon} ${l.title}</div>`
+  ).join('');
+}
+
+// ── INIT ──
+renderCurriculum();
+</script>
+</body>
+</html>
